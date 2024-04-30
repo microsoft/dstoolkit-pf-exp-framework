@@ -1,0 +1,16 @@
+$schema: https://azuremlschemas.azureedge.net/promptflow/latest/Run.schema.json
+run: image_to_text_flow_variant_1_20240125_123621_945558
+environment_variables:
+  # environment variables from connection
+  AZURE_OPENAI_API_KEY: ${open_ai_connection_vision.api_key}
+  AZURE_OPENAI_API_BASE: ${open_ai_connection_vision.api_base}
+  AZURE_OPENAI_API_TYPE: azure
+#variant: ${validate_keywords.variant_1}
+column_mapping:
+  fsn: ${run.inputs.fsn} 
+  title: ${run.inputs.title} 
+  llm_output: ${run.outputs.attributes_result}
+  grounding_attributes: ${run.inputs.grounding_attributes}
+  keywords: ${run.inputs.keywords}
+  ground_truth: ${run.inputs.ground_truth}
+  image_to_text_run: image_to_text_flow_variant_1_20240125_123621_945558

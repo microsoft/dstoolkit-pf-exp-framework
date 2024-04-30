@@ -1,0 +1,6 @@
+flake8
+flake8-docstrings
+promptflow[azure]
+promptflow-tools
+jupyter
+python-dotenv

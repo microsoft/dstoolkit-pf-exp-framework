@@ -1,0 +1,14 @@
+$schema: https://azuremlschemas.azureedge.net/promptflow/latest/Run.schema.json
+flow: .
+runtime: testruntime
+run: validate_keywords_flow_variant_1_20240125_124111_191864
+display_name: anchugh_evaluation_keyword_correctness_${timestamp}
+environment_variables:
+  AZURE_OPENAI_API_KEY: ${open_ai_connection_vision.api_key}
+  AZURE_OPENAI_API_BASE: ${open_ai_connection_vision.api_base}
+  AZURE_OPENAI_API_TYPE: azure
+column_mapping:
+  ground_truth: ${run.outputs.ground_truth}
+  predictions_str: ${run.outputs.experiment_result}
+  image_to_text_run: ${run.outputs.image_to_text_run}
+  validate_keywords_run: validate_keywords_flow_variant_1_20240125_124111_191864
