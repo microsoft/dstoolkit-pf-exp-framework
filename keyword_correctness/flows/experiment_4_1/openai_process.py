@@ -221,6 +221,8 @@ def openai_process( row_index: int,
                     connection_1: AzureOpenAIConnection,
                     connection_2: AzureOpenAIConnection,
                     connection_3: AzureOpenAIConnection,
+                    connection_4: AzureOpenAIConnection,
+                    connection_5: AzureOpenAIConnection,
                     mandatory_grounding_attributes: dict,
                     good_to_have_grounding_attributes: dict,
                     deployment_name: str,
@@ -254,12 +256,13 @@ def openai_process( row_index: int,
         
         if len(product_images) == 0 or fsn == "" or \
             len(keywords) == 0 or  connection_1 == None or \
-                connection_2 == None or connection_3 == None or  deployment_name == ""  or \
+                connection_2 == None or connection_3 == None or connection_4 == None or \
+                    connection_5 == None or deployment_name == ""  or \
                      len(mandatory_grounding_attributes) == 0:
                 raise ValueError("Missing required input params")
             
             
-        connections = [connection_1, connection_2, connection_3]
+        connections = [connection_1, connection_2, connection_3, connection_4, connection_5]
         connection_index = int(row_index) % len(connections) 
         openai_url = connections[connection_index].api_base
         

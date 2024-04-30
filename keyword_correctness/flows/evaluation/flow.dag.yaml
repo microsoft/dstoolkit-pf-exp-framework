@@ -1,0 +1,36 @@
+$schema: https://azuremlschemas.azureedge.net/promptflow/latest/Flow.schema.json
+environment:
+  python_requirements_txt: requirements.txt
+inputs:
+  fsn:
+    type: string
+    is_chat_input: false
+    default: ""
+  ground_truth:
+    type: object
+    is_chat_input: false
+  predictions_str:
+    type: string
+    is_chat_input: false
+    default: ""
+outputs:
+  scores:
+    type: object
+    reference: ${grade.output}
+nodes:
+- name: grade
+  type: python
+  source:
+    type: code
+    path: grade.py
+  inputs:
+    ground_truth: ${inputs.ground_truth}
+    predictions_str: ${inputs.predictions_str}
+- name: calculate_metrics
+  type: python
+  source:
+    type: code
+    path: calculate_metrics.py
+  inputs:
+    grades: ${grade.output}
+  aggregation: true

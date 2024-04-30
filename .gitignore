@@ -10,7 +10,9 @@
 *.userosscache
 *.sln.docstates
 
-.venv/*
+.venv*/*
+keyword_correctness/downloads/**/*
+keyword_correctness/runs/**/*
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
