@@ -14,6 +14,16 @@ logger = logging.getLogger(__name__)
 
 @tool
 def grade(ground_truth: dict, predictions_str: str):
+    """
+    Grade the predictions based on the ground truth and calculate metrics.
+
+    Args:
+        ground_truth (dict): A dictionary containing the ground truth keywords and their labels.
+        predictions_str (str): A string containing the predictions in JSON or CSV format.
+
+    Returns:
+        dict: A dictionary containing the grading results and calculated metrics.
+    """
     output_dict = get_default_output_dict()
     # get keywords count from ground truth dict
     keyword_count = len(ground_truth.keys())
@@ -116,6 +126,18 @@ def grade(ground_truth: dict, predictions_str: str):
 
 
 def parse_predictions(predictions_str):
+    """
+    Parses the predictions string and returns a list of prediction records.
+
+    Args:
+        predictions_str (str): The string containing predictions in either JSON or CSV format.
+
+    Returns:
+        list: A list of prediction records. Each record is a dictionary with 'keyword', 'reason', and 'result' keys.
+
+    Raises:
+        ValueError: If the predictions string is not in a valid JSON or CSV format.
+    """
     # detect if predictions_str is array of json or csv
     predictions_str = predictions_str.replace(
         "```json", "").replace("```csv", "").replace("```", "")
@@ -132,7 +154,21 @@ def parse_predictions(predictions_str):
     return predictions
 
 
+
 def get_metrics(y_true, y_pred, conf_threshold, metric_postfix):
+    """
+    Calculate evaluation metrics based on true labels and predicted labels.
+
+    Args:
+        y_true (array-like): True labels.
+        y_pred (array-like): Predicted labels.
+        conf_threshold (float): Confidence threshold for binary classification.
+        metric_postfix (str): Postfix to append to metric names.
+
+    Returns:
+        dict: A dictionary containing the evaluation metrics.
+
+    """
     y_true = np.asarray(y_true)
     y_pred = np.asarray(y_pred)
     # apply confidence threshold
@@ -140,7 +176,6 @@ def get_metrics(y_true, y_pred, conf_threshold, metric_postfix):
     y_pred[y_pred < conf_threshold] = 0.0
 
     # get tn, tp, fn, fp
-    # cm_val = confusion_matrix(y_true, y_pred)
     TP, TN, FP, FN = (
         sum((y_true == 1) * (y_pred == 1)),
         sum((y_true == 0) * (y_pred == 0)),
@@ -149,10 +184,10 @@ def get_metrics(y_true, y_pred, conf_threshold, metric_postfix):
     )
 
     metrics_dict = {
-        "true_negative%s" % metric_postfix: TN,  # cm_val[0][0],
-        "true_positive%s" % metric_postfix: TP,  # cm_val[1][1],
-        "false_negative%s" % metric_postfix: FN,  # cm_val[1][0],
-        "false_positive%s" % metric_postfix: FP,  # cm_val[0][1],
+        "true_negative%s" % metric_postfix: TN,
+        "true_positive%s" % metric_postfix: TP,
+        "false_negative%s" % metric_postfix: FN,
+        "false_positive%s" % metric_postfix: FP,
         "gt_vs_pred%s" % metric_postfix: list(np.asarray(y_true == y_pred, dtype=float))
     }
     metrics_dict = metrics_dict | calc_metrics(
@@ -164,21 +199,42 @@ def get_metrics(y_true, y_pred, conf_threshold, metric_postfix):
 
 
 def get_default_output_dict():
+    """
+    Returns a default output dictionary with the following keys and initial values:
+    
+    - "keyword_count": 0, count of keywords in ground truth
+    - "ground_truth": {}, ground truth dictionary
+    - "pred_big_parse_error": 0, error parsing predictions as json
+    - "pred_big_parse_error_msg": "", error parsing predictions as json
+    - "predictions": [], list of predictions
+    - "pred_small_parse_errors": [], list of formatting errors in predictions + reason
+    - "pred_small_parse_errors_count": 0, number of formatting errors predictions
+    
+    Returns:
+        dict: A default output dictionary.
+    """
     output_dict = {
-        "keyword_count": 0,  # count of keywords in ground truth
-        "ground_truth": {},  # ground truth dictionary
-        "pred_big_parse_error": 0,  # error parsing predictions as json
-        "pred_big_parse_error_msg": "",  # error parsing predictions as json
-        "predictions": [],  # list of predictions
-        "pred_small_parse_errors": [],  # list of formatting errors in predictions + reason
-        "pred_small_parse_errors_count": 0,  # number of formatting errors predictions
+        "keyword_count": 0,
+        "ground_truth": {},
+        "pred_big_parse_error": 0,
+        "pred_big_parse_error_msg": "",
+        "predictions": [],
+        "pred_small_parse_errors": [],
+        "pred_small_parse_errors_count": 0,
     }
     return output_dict
 
 
 def convert_labels_to_float(labels_list: List):
-    # takes in a list of values: ["correct", "incorrect"]
-    # outputs a list of floats: [1.0, 0.0]
+    """
+    Converts a list of labels to a list of floats.
+
+    Args:
+        labels_list (List): A list of values representing labels.
+
+    Returns:
+        List: A list of floats representing the converted labels.
+    """
     new_labels = []
     for label in labels_list:
         if type(label) is str:

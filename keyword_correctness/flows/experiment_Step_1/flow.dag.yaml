@@ -200,43 +200,83 @@ outputs:
     type: string
     reference: ${openai_process.output.completion_tokens}
 nodes:
-- name: input_processing
-  type: python
-  source:
-    type: code
-    path: input_processing.py
-  inputs:
-    keywords: ${inputs.keywords}
-    grounding_attributes: ${inputs.grounding_attributes}
-  use_variants: false
-- name: image_processing
-  type: python
-  source:
-    type: code
-    path: image_processing.py
-  inputs:
-    image_urls: ${inputs.images}
-- name: openai_process
-  type: python
-  source:
-    type: code
-    path: openai_process.py
-  inputs:
-    connection_1: aoai_gpt_4v_connection
-    connection_2: aoai_gpt4v_westus
-    connection_3: aoai_gpt4v_japan
-    connection_4: aoai_gpt4v_sweden
-    connection_5: aoai_gpt4v_aus
-    row_index: ${inputs.row_index}
-    product_images: ${image_processing.output}
-    prompt_template: image_to_results_lmm_variant_0.jinja2
-    fsn: ${inputs.fsn}
-    keywords: ${inputs.keywords}
-    mandatory_grounding_attributes: ${input_processing.output.mandatory_grounding_attributes}
-    temperature: ${inputs.temperature}
-    top_p: ${inputs.top_p}
-    seed: ${inputs.seed}
-    max_tokens: ${inputs.max_tokens}
-    res: ${inputs.resolution}
-    good_to_have_grounding_attributes: ${input_processing.output.good_to_have_grounding_attributes}
-    deployment_name: gpt-4v
+  - name: input_processing
+    type: python
+    source:
+      type: code
+      path: input_processing.py
+    inputs:
+      keywords: ${inputs.keywords}
+      grounding_attributes: ${inputs.grounding_attributes}
+    use_variants: false
+  - name: image_processing
+    type: python
+    source:
+      type: code
+      path: image_processing.py
+    inputs:
+      image_urls: ${inputs.images}
+  - name: openai_process
+    type: python
+    source:
+      type: code
+      path: openai_process.py
+    use_variants: true
+    inputs:
+     
+node_variants:
+  openai_process:
+    default_variant_id: variant_0
+    variants:
+      variant_0:
+        node:
+          type: python
+          source:
+            type: code
+            path: openai_process.py
+          inputs:
+            prompt_template: image_to_results_lmm_variant_0.jinja2
+            connection_1: aoai_gpt_4v_connection
+            connection_2: aoai_gpt4v_westus
+            connection_3: aoai_gpt4v_japan
+            connection_4: aoai_gpt4v_sweden
+            connection_5: aoai_gpt4v_aus
+            row_index: ${inputs.row_index}
+            product_images: ${image_processing.output}
+            fsn: ${inputs.fsn}
+            keywords: ${inputs.keywords}
+            mandatory_grounding_attributes: ${input_processing.output.mandatory_grounding_attributes}
+            temperature: ${inputs.temperature}
+            top_p: ${inputs.top_p}
+            seed: ${inputs.seed}
+            max_tokens: ${inputs.max_tokens}
+            res: ${inputs.resolution}
+            good_to_have_grounding_attributes: ${input_processing.output.good_to_have_grounding_attributes}
+            deployment_name: gpt-4v
+      variant_1:
+        node:
+          type: python
+          source:
+            type: code
+            path: openai_process.py
+          inputs:
+            prompt_template: image_to_results_lmm_variant_1.jinja2
+            connection_1: aoai_gpt_4v_connection
+            connection_2: aoai_gpt4v_westus
+            connection_3: aoai_gpt4v_japan
+            connection_4: aoai_gpt4v_sweden
+            connection_5: aoai_gpt4v_aus
+            row_index: ${inputs.row_index}
+            product_images: ${image_processing.output}
+            fsn: ${inputs.fsn}
+            keywords: ${inputs.keywords}
+            mandatory_grounding_attributes: ${input_processing.output.mandatory_grounding_attributes}
+            temperature: ${inputs.temperature}
+            top_p: ${inputs.top_p}
+            seed: ${inputs.seed}
+            max_tokens: ${inputs.max_tokens}
+            res: ${inputs.resolution}
+            good_to_have_grounding_attributes: ${input_processing.output.good_to_have_grounding_attributes}
+            deployment_name: gpt-4v
+            
+      

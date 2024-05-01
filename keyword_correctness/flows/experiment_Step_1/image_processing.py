@@ -12,6 +12,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 NO_OF_IMAGES_TO_PROCESS = 1
 
+
 @tool
 def process_image(image_urls: List[str]) -> List[str]:
     """
@@ -21,7 +22,7 @@ def process_image(image_urls: List[str]) -> List[str]:
         image_urls (list[str]): List of urls for original product images
 
     Returns:
-        list[PFImage]: List of resized product images
+        list[str]: List of base64 encoded resized product images
     """
     required_size = (1024, 1024)
 

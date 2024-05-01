@@ -29,24 +29,26 @@ def make_openai_call(client: AzureOpenAI,
                      top_p: Optional[float],
                      temperature: Optional[float],
                      openai_url:Optional[str]) -> dict:
-    """Function to make openai api call
+    """Function to make an OpenAI API call.
 
     Args:
-        client (AzureOpenAI): AzureOpenAI client connection
-        deployment_name (str): deployment name
-        messages (list): messages list 
-        prompt_message (dict) : prompt message dict 
-        max_tokens (int): max token count
-        seed (int, optional): seed value. 
-        top_p (float, optional): top_p value. 
-        temperature (float, optional): temperature value. 
+        client (AzureOpenAI): AzureOpenAI client connection.
+        deployment_name (str): Deployment name.
+        messages (list): List of messages.
+        prompt_message (dict): Prompt message dictionary.
+        row_index (int): Row index.
+        max_tokens (int, optional): Maximum token count.
+        seed (int, optional): Seed value.
+        top_p (float, optional): Top p value.
+        temperature (float, optional): Temperature value.
+        openai_url (str, optional): OpenAI URL.
 
     Returns:
-        dict: Returns the response from openai in dict format
+        dict: Response from OpenAI in dictionary format.
     """
     
     try:
-        logger.info("Making openai call")
+        logger.info("Making OpenAI call")
         response = None
         
         if client is None:
@@ -62,10 +64,10 @@ def make_openai_call(client: AzureOpenAI,
             temperature=temperature
         )
         time_taken = time.time() - start_time
-        print(f"Row: {row_index} OpenAI call took {time_taken} seconds for url {openai_url}", file=sys.stderr)
+        #print(f"Row: {row_index} OpenAI call took {time_taken} seconds for url {openai_url}", file=sys.stderr)
         
         if response is None:
-            print(f"Row {row_index} Chat Completions response is None {str(e)}",file="sys.stderr")
+            #print(f"Row {row_index} Chat Completions response is None {str(e)}",file="sys.stderr")
             raise Exception("Chat Completions response is None")
         
         if not isinstance(response, dict):
@@ -74,7 +76,7 @@ def make_openai_call(client: AzureOpenAI,
         choices = response.get("choices", [])
         
         if len(choices) == 0:
-            print(f"Row {row_index},Error in generating keyword correctness response {str(e)}",file="sys.stderr")
+            #print(f"Row {row_index},Error in generating keyword correctness response {str(e)}",file="sys.stderr")
             raise Exception("Error in generating keyword correctness response")
         else:
             message = choices[0].get("message", {})
@@ -234,23 +236,32 @@ def openai_process( row_index: int,
                     ) -> dict:
     """Prompt flow tool function to make openai call and get the response
 
-
     Args:
-        product_images (list[str]): list if product images
-        prompt_template (str): product template name
-        fsn (str): fsn
-        keywords (dict): keywords
-        grounding_attributes (dict): grounding attributes
-        connection (AzureOpenAIConnection): connection object
-        deployment_name (str): deployment name
-        temperature (Optional[float], optional): temperature. 
-        top_p (Optional[float], optional): top_p.
-        seed (Optional[int], optional): seed. 
-        max_tokens (Optional[int], optional): maxtokens. 
-        res (str, optional): res.
+        row_index (int): The index of the row being processed.
+        product_images (list[str]): A list of product images.
+        prompt_template (str): The name of the product template.
+        fsn (str): The fsn (file serial number) of the product.
+        keywords (dict): A dictionary of keywords.
+        connection_1 (AzureOpenAIConnection): The first Azure OpenAI connection object.
+        connection_2 (AzureOpenAIConnection): The second Azure OpenAI connection object.
+        connection_3 (AzureOpenAIConnection): The third Azure OpenAI connection object.
+        connection_4 (AzureOpenAIConnection): The fourth Azure OpenAI connection object.
+        connection_5 (AzureOpenAIConnection): The fifth Azure OpenAI connection object.
+        mandatory_grounding_attributes (dict): A dictionary of mandatory grounding attributes.
+        good_to_have_grounding_attributes (dict): A dictionary of good-to-have grounding attributes.
+        deployment_name (str): The name of the deployment.
+        temperature (Optional[float]): The temperature for the OpenAI call (optional).
+        top_p (Optional[float]): The top_p value for the OpenAI call (optional).
+        seed (Optional[int]): The seed for the OpenAI call (optional).
+        max_tokens (Optional[int]): The max_tokens value for the OpenAI call (optional).
+        res (str, optional): The res value for the OpenAI call (optional).
 
     Returns:
-        dict: returns dict of output result
+        dict: A dictionary containing the output result.
+
+    Raises:
+        ValueError: If any of the required input parameters are missing.
+
     """
     try:
         
@@ -266,7 +277,7 @@ def openai_process( row_index: int,
         connection_index = int(row_index) % len(connections) 
         openai_url = connections[connection_index].api_base
         
-        print(f"Processing row :{row_index} with {openai_url}", file=sys.stderr) 
+        #print(f"Processing row :{row_index} with {openai_url}", file=sys.stderr) 
         
         client = create_openai_client(connection=connections[connection_index],
                                       deployment_name=deployment_name)

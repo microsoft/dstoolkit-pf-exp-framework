@@ -9,6 +9,15 @@ import re
 
 @tool
 def calculate_metrics(grades: List[dict]):
+    """
+    Calculate various metrics based on the input grades.
+
+    Args:
+        grades (List[dict]): A list of dictionaries representing the grades.
+
+    Returns:
+        dict: A dictionary containing the calculated metrics.
+    """
     metrics_dict = {}
     eval_df = pd.DataFrame(grades)
     #### errors metrics
@@ -108,6 +117,15 @@ def calculate_metrics(grades: List[dict]):
     return metrics_dict
 
 def get_best_metrics_by_threshold(df):
+    """
+    Get the best metrics by threshold from the given DataFrame.
+
+    Args:
+        df (pd.DataFrame): The DataFrame containing the metrics.
+
+    Returns:
+        dict: A dictionary containing the best metrics.
+    """
     # calc metrics only if valid rows are present
     list_of_metrics = ["accuracy", "recall_incorrect", "recall_correct", "precision_incorrect", "precision_correct", "f1_incorrect", "f1_correct"]
     metrics_dict = {}
@@ -149,6 +167,20 @@ def get_best_metrics_by_threshold(df):
     return best_metrics_df.to_dict("records")[0]
 
 def calc_metrics(TP, TN, FP, FN, metric_prefix="", metric_postfix=""):
+    """
+    Calculate metrics based on the given TP, TN, FP, FN values.
+
+    Args:
+        TP (int): True positive count.
+        TN (int): True negative count.
+        FP (int): False positive count.
+        FN (int): False negative count.
+        metric_prefix (str, optional): Prefix for the metric names. Defaults to "".
+        metric_postfix (str, optional): Postfix for the metric names. Defaults to "".
+
+    Returns:
+        dict: A dictionary containing the calculated metrics.
+    """
     metrics = {}
     metrics["%saccuracy%s" % (metric_prefix, metric_postfix)] = (TP + TN) / (TP + FN + TN + FP)
 
@@ -174,9 +206,20 @@ def calc_metrics(TP, TN, FP, FN, metric_prefix="", metric_postfix=""):
     )
     return metrics
 
+
+
 def get_unique_tokens(keywords_str: str):
+    """
+    Returns a list of unique tokens from the given keywords string.
+
+    Args:
+        keywords_str (str): The input string containing keywords.
+
+    Returns:
+        list: A list of unique tokens extracted from the keywords string.
+    """
     keywords_str = re.sub('[^\w]+', ' ', keywords_str)
-    keywords_list= keywords_str.split()
+    keywords_list = keywords_str.split()
     unique_tokens = []
     for token in keywords_list:
         if not token in unique_tokens:
@@ -184,6 +227,16 @@ def get_unique_tokens(keywords_str: str):
     return unique_tokens
 
 def calc_overlap_of_correct(true_tokens, pred_tokens):
+    """
+    Calculates the overlap of correct tokens between the true tokens and predicted tokens.
+
+    Parameters:
+    true_tokens (list): A list of true tokens.
+    pred_tokens (list): A list of predicted tokens.
+
+    Returns:
+    float: The overlap of correct tokens between the true tokens and predicted tokens.
+    """
     try:
         intersection = len(set(pred_tokens) & set(true_tokens))
         union = len(set(pred_tokens) | set(true_tokens))

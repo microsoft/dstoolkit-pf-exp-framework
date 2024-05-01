@@ -3,7 +3,7 @@ environment:
 inputs:
   fsn:
     type: string
-    default: ETHGHRFHHTRYNPAQ
+    default: FSN01
     is_chat_input: false
   description_from_llm:
     type: string
@@ -83,50 +83,14 @@ inputs:
       value: Dupatta
       priority: mandatory
       fillRate: 99.92
-    - name: size_chart_attributes
-      value: brand|sleeve|ideal_for
-      priority: not_applicable_for_seller
-      fillRate: 100
-    - name: type
-      value: Kurta, Sharara and Dupatta Set
-      priority: not_applicable_for_seller
-      fillRate: 55.53
-    - name: sales_package_id
-      value: 1 Top
-      priority: mandatory
-      fillRate: 100
-    - name: sales_package_id
-      value: 1 Bottom
-      priority: mandatory
-      fillRate: 100
-    - name: sales_package_id
-      value: 1 Dupatta
-      priority: mandatory
-      fillRate: 100
-    - name: detail_placement
-      value: All - Over
-      priority: good_to_have
-      fillRate: 46.02
     - name: sleeve_style
       value: Regular Sleeve
       priority: good_to_have
       fillRate: 68.47
-    - name: combo_attr_for_swatch
-      value: null
-      priority: not_applicable_for_seller
-      fillRate: 83.06
     - name: fabric_care
       value: Hand Wash
       priority: good_to_have
       fillRate: 72.83
-    - name: secondary_color
-      value: Brown
-      priority: good_to_have
-      fillRate: 26.93
-    - name: filter_size
-      value: XL
-      priority: not_applicable_for_seller
-      fillRate: 99.68
     - name: brand
       value: THE FAB FACTORY
       priority: mandatory
@@ -143,14 +107,6 @@ inputs:
       value: Rayon
       priority: good_to_have
       fillRate: 66.25
-    - name: key_features
-      value: Women Rayon Wine Printed Kurta Palazzo and Dupatta Set
-      priority: good_to_have
-      fillRate: 42.01
-    - name: mediaData
-      value: IMAGMVVUGXPJGDCD
-      priority: not_applicable_for_seller
-      fillRate: 89.29
     - name: top_length
       value: Calf Length
       priority: good_to_have
@@ -179,14 +135,6 @@ inputs:
       value: Viscose Rayon
       priority: mandatory
       fillRate: 100
-    - name: bottom_type
-      value: Palazzo
-      priority: mandatory
-      fillRate: 98.21
-    - name: surface_styling
-      value: None
-      priority: good_to_have
-      fillRate: 35.06
     is_chat_input: false
   keywords:
     type: object
@@ -217,36 +165,65 @@ outputs:
     type: string
     reference: ${llm_prompt.output}
 nodes:
-- name: input_processing
-  type: python
-  source:
-    type: code
-    path: input_processing.py
-  inputs:
-    keywords: ${inputs.keywords}
-    grounding_attributes: ${inputs.grounding_attributes}
-  use_variants: false
-- name: llm_validate_keywords
-  type: llm
-  source:
-    type: code
-    path: text_to_results_llm.jinja2
-  inputs:
-    deployment_name: gpt-35
-    max_tokens: 4096
-    temperature: 0
-    top_p: 0.1
-    prompt_str: ${llm_prompt.output}
-  connection: gpt-35
-  api: chat
-  use_variants: false
-- name: llm_prompt
-  type: prompt
-  source:
-    type: code
-    path: llm_prompt.jinja2
-  inputs:
-    keywords: ${input_processing.output.keywords}
-    product_image_description: ${inputs.description_from_llm}
-    mandatory_grounding_attributes: ${input_processing.output.mandatory_grounding_attributes}
-    good_to_have_grounding_attributes: ${input_processing.output.good_to_have_grounding_attributes}
+  - name: input_processing
+    type: python
+    source:
+      type: code
+      path: input_processing.py
+    inputs:
+      keywords: ${inputs.keywords}
+      grounding_attributes: ${inputs.grounding_attributes}
+    use_variants: false
+  - name: llm_validate_keywords
+    type: llm
+    source:
+      type: code
+      path: text_to_results_llm.jinja2
+    inputs:
+      deployment_name: gpt-35
+      max_tokens: 4096
+      temperature: 0
+      top_p: 0.1
+      prompt_str: ${llm_prompt.output}
+    connection: aoai_gpt_35t_connection
+    api: chat
+    use_variants: false
+  - name: llm_prompt
+    use_variants: true
+node_variants:
+  llm_prompt:
+    default_variant_id: variant_1
+    variants:
+      variant_0:
+        node:
+          type: prompt
+          source:
+            type: code
+            path: llm_prompt_variant_0.jinja2
+          inputs:
+            keywords: ${input_processing.output.keywords}
+            product_image_description: ${inputs.description_from_llm}
+            mandatory_grounding_attributes: ${input_processing.output.mandatory_grounding_attributes}
+            good_to_have_grounding_attributes: ${input_processing.output.good_to_have_grounding_attributes}
+      variant_1:
+          node:
+            type: prompt
+            source:
+              type: code
+              path: llm_prompt_variant_1.jinja2
+            inputs:
+              keywords: ${input_processing.output.keywords}
+              product_image_description: ${inputs.description_from_llm}
+              mandatory_grounding_attributes: ${input_processing.output.mandatory_grounding_attributes}
+              good_to_have_grounding_attributes: ${input_processing.output.good_to_have_grounding_attributes}
+      variant_2:
+          node:
+            type: prompt
+            source:
+              type: code
+              path: llm_prompt_variant_2.jinja2
+            inputs:
+              keywords: ${input_processing.output.keywords}
+              product_image_description: ${inputs.description_from_llm}
+              mandatory_grounding_attributes: ${input_processing.output.mandatory_grounding_attributes}
+              good_to_have_grounding_attributes: ${input_processing.output.good_to_have_grounding_attributes}
