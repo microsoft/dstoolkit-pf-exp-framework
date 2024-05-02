@@ -48,15 +48,17 @@ We need five connections one for GPT4V and another for GPT3.5-turbo.
 
 ### Creating GPT4V Connection
 
-Use this command to create gpt connections from connections listed in `keyword_correctness\connections` folder. Substitute api_key  in the command
+Please create connection files from the [teample](../keyword_correctness/connections/aoai_gpt4v_region.yaml) in `keyword_correctness\connections`. Replace region with the region of Azure Open AI instance.
+
+Use this command to create gpt connections from connections listed in `keyword_correctness\connections` folder. Substitute api_key and api_base in the command
 
 ```shell
-pf connection create --file keyword_correctness\connections\azure_openai_gpt4v.yaml --set api_key=<your_api_key> api_base="https://<azure_openai_resource_name>.openai.azure.com/"
+pf connection create --file keyword_correctness\connections\aoai_gpt4v_westus.yaml --set api_key=<your_api_key> api_base="https://<azure_openai_resource_name>.openai.azure.com/"
 ```
 
 ### Creating GPT3.5t Connection
 
-Use this command to create gpt3.5t connection. Substitute api_key in the command
+Use this command to create gpt3.5t connection. Substitute api_key and api_base in the command
 
 ```shell
 pf connection create --file keyword_correctness\connections\azure_openai_gpt35t.yaml --set api_key=<your_api_key> api_base="https://<azure_openai_resource_name>.openai.azure.com/"

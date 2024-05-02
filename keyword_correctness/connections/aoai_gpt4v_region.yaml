@@ -1,7 +1,7 @@
 $schema: https://azuremlschemas.azureedge.net/promptflow/latest/AzureOpenAIConnection.schema.json
-name: aoai_gpt4v_japan
+name: aoai_gpt4v_<region>
 type: azure_open_ai # snake case
 api_key: "<user-input>" # Don't replace the '<user-input>' placeholder. The application will prompt you to enter a value when it runs.
-api_base: "https://gpt4v-japaneast.openai.azure.com/"
+api_base: "<user-input>" # Don't replace the '<user-input>' placeholder. The application will prompt you to enter a value when it runs.
 api_type: "azure"
 api_version: "2023-07-01-preview"

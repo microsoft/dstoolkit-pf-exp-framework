@@ -1,16 +1,10 @@
 # PromptFlow Experimentation Framework
 
-Experiment framework is a library of utility functions that uses prompt flow sdk to run and monitor experiments and evaluations and to do result analysis and error analysis.
-This library fills following gaps which were ecountered while executing experiments.
-
-## Gaps Encountered
-* It was cumbersome and repetitive for every developer to use promptflow sdk directly in notebook, so creating an abstraction layer for running experiments was necessary. 
-* PromptFlow LLM tool lacks detail param that is needed to switch between high/low resolution images. We needed this feature as we planned to run experiments with both high and low res images. 
-* The current LLM tool from PromptFlow can only connect to one AzureOpenAI instance. However, to increase the openai calls with GPT4V, we have to use multiple open ai instances, which the LLM tool cannot handle. Therefore, we had to create a custom tool to enable this feature.
+This experiment framework is a utility library that uses the prompt flow SDK to conduct, track and analyze experiments.
 
 ## Key Features of Experimentation Framework
 * **Making the experiment execution process developer friendly** by providing apis based on promptflow sdk.
-To run experiments, developers need to use PromptFlow SDK functions. Framework offers APIs to create and run experiments, instead of using sdk functions directly.
+Framework offers APIs to create and run experiments, instead of using sdk functions directly.
 * **Conduct experiments on local machines or on AML workspace Framework** can switch between local or AML workspace by modifying one input param. Data scientists can run experiments with small dataset on local machines and use AML workspace to run experiments with large datasets.
 * **One-click execution of notebooks to run experiments with multiple flows and evaluation workflow**. Typically, the outputs of an experiment are fed as inputs to the evaluation stage. Data scientist may wish to run the evaluation stage following the experiment which may consists of multiple flows. In our case we had two step experiment followed by evaluation step. These stages can be merged into a notebook that can be executed with one click. This allows data scientists to run the entire workflow with minimal supervision.
 * **Assigning unique ids as suffix** to identify multiple experiments from same notebook and **unique tags as prefix** to each run to track runs from multiple developers. This helps in monitoring of the experiments. 
@@ -29,6 +23,9 @@ Please follow [this link for the dev setup](./docs/dev-setup.md) details.
 *   [docs](./docs/) : Contains the documentation.
 *   [common](./common/): Contains common python files required for experiment execution
 *   [keyword_correctness](./keyword_correctness/): Contains experiment and evaluation flow for keyword correctness use case. 
+
+## DataScience Metrics
+Datascience metrics used in the experimentation can be found [here.](./docs/data_science_metrics.md)
 
 ## Experiment Details
 Please follow this [link](./docs/experiment_details.md) to get to know more about experiment details.
