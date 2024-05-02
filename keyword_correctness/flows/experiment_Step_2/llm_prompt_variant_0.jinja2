@@ -1,0 +1,31 @@
+# system:
+As an AI assistant, your task is to analyze provided information and respond to questions about it.
+Remember to provide accurate answers based only on provided information.
+
+# user:
+Instruction: Based on PRODUCT ATTRIBUTES and PRODUCT IMAGE DESCRIPTION please evaluate the CORRECTNESS of PRODUCT KEYWORDS.
+CORRECTNESS should be validated based on factual information present in PRODUCT ATTRIBUTES and PRODUCT IMAGE DESCRIPTION. Do not evaluate KEYWORDS on spelling or grammer mistakes. Even if there is spelling or gramatic mistake only evaluate KEYWORDS on factual information present in PRODUCT ATTRIBUTES or in the PRODUCT IMAGE DESCRIPTION.
+Input Format: PRODUCT KEYWORDS are provided to you as an array of strings. Each PRODUCT KEYWORD is enclosed in single quotes consisting of multiple words separated by whitespaces. Do not split single PRODUCT KEYWORD on whitespaces or try to correct spelling issues. Treat each PRODUCT KEYWORD as is even if it doesn't make sense.  PRODUCT ATTRIBUTES are provided as key value pair in dictionary.
+Output Format: Return only an array of JSON objects containing KEYWORD, REASON and RESULT field where KEYWORD is one the evaluated PRODUCT KEYWORDS, REASON is the reasoning behind the CORRECTNESS classification and RESULT field is the confidence level of CORRECTNESS evaluation and should be an integer ranging from 0 to 10 where 0 is surely incorrect and 10 is surely correct. Do not output anything else before or after the JSON. JSON should be valid. Do not use single quotes to wrap keys or string values. Use only double quotes. DO NOT change the order of the keywords. DO NOT miss out any keywords.
+
+**** Factual information of product ****
+
+PRODUCT IMAGE DESCRIPTION:
+{{product_image_description}}
+
+PRODUCT ATTRIBUTES:
+{% set top_n_good_to_have_grounding_attributes =  good_to_have_grounding_attributes.items()|list %}
+{% set top_n_good_to_have_grounding_attributes = top_n_good_to_have_grounding_attributes[:10] %}
+{% set combined = mandatory_grounding_attributes.update(top_n_good_to_have_grounding_attributes) %}
+{{mandatory_grounding_attributes}}
+
+**** Factual information of product ****
+
+PRODUCT KEYWORDS:
+{{keywords}} 
+
+Output Example:
+[
+    {"keyword": "product keyword #1", "reason": "reason for classifying this keyword as correct", "result": 10},
+    {"keyword": "product keyword #2", "reason": "reason for classifying this keyword as maybe incorrect", "result": 4}
+]

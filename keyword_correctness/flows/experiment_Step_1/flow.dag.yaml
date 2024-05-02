@@ -1,0 +1,282 @@
+environment:
+  python_requirements_txt: requirements.txt
+environment_variables:
+  PF_WORKER_COUNT: 4
+inputs:
+  fsn:
+    type: string
+    default: FSN001
+  images:
+    type: list
+    default:
+    - http://img.fkcdn.com/image/kt4ozgw0/ethnic-set/q/m/x/xl-marron-k-marwar-dyeing-original-imag6jeknhyqnzxh.jpeg
+  keywords:
+    type: object
+    default:
+      ethnicset: correct
+      kurtaset: correct
+      printedkurta: correct
+      cotton: incorrect
+      printed: correct
+      new design: incorrect
+      long: incorrect
+      short: incorrect
+      sleeve: correct
+  grounding_attributes:
+    type: list
+    default:
+    - name: occasion
+      value: Festive & Party
+      priority: good_to_have
+      fillRate: 80
+    - name: other_details
+      value: Women Rayon Wine Printed
+      priority: good_to_have
+      fillRate: 20
+    - name: color
+      value: Maroon
+      priority: mandatory
+      fillRate: 100
+    - name: keywords
+      value: ethnic set
+      priority: good_to_have
+      fillRate: 71.58
+    - name: keywords
+      value: kurta Pant set
+      priority: good_to_have
+      fillRate: 71.58
+    - name: keywords
+      value: kurta set
+      priority: good_to_have
+      fillRate: 71.58
+    - name: keywords
+      value: kurta set for girls
+      priority: good_to_have
+      fillRate: 71.58
+    - name: keywords
+      value: printed kurta
+      priority: good_to_have
+      fillRate: 71.58
+    - name: pattern
+      value: Floral Print
+      priority: mandatory
+      fillRate: 100
+    - name: top_type
+      value: Kurta
+      priority: mandatory
+      fillRate: 99.42
+    - name: description
+      value: Wine embellished printed kurta with plazo with printed
+        dupatta.
+      priority: good_to_have
+      fillRate: 64.64
+    - name: add_on
+      value: Dupatta
+      priority: mandatory
+      fillRate: 99.92
+    - name: size_chart_attributes
+      value: brand|sleeve|ideal_for
+      priority: not_applicable_for_seller
+      fillRate: 100
+    - name: type
+      value: Kurta, Sharara and Dupatta Set
+      priority: not_applicable_for_seller
+      fillRate: 55.53
+    - name: sales_package_id
+      value: 1 Top
+      priority: mandatory
+      fillRate: 100
+    - name: sleeve_style
+      value: Regular Sleeve
+      priority: good_to_have
+      fillRate: 68.47
+    - name: fabric_care
+      value: Hand Wash
+      priority: good_to_have
+      fillRate: 72.83
+    - name: secondary_color
+      value: Brown
+      priority: good_to_have
+      fillRate: 26.93
+    - name: brand
+      value: THE FAB FACTORY
+      priority: mandatory
+      fillRate: 100
+    - name: color_code
+      value: Wine
+      priority: mandatory
+      fillRate: 100
+    - name: ideal_for
+      value: Women
+      priority: mandatory
+      fillRate: 100
+    - name: bottom_fabric
+      value: Rayon
+      priority: good_to_have
+      fillRate: 66.25
+    - name: key_features
+      value: Women Rayon Wine Printed Kurta Palazzo and Dupatta Set
+      priority: good_to_have
+      fillRate: 42.01
+    - name: top_length
+      value: Calf Length
+      priority: good_to_have
+      fillRate: 70.35
+    - name: neck
+      value: Mandarin Collar
+      priority: good_to_have
+      fillRate: 77.13
+    - name: dupatta_included
+      value: Yes
+      priority: good_to_have
+      fillRate: 71.52
+    - name: sleeve
+      value: Half Sleeve
+      priority: mandatory
+      fillRate: 100
+    - name: fabric
+      value: Viscose Rayon
+      priority: mandatory
+      fillRate: 100
+    - name: bottom_type
+      value: Palazzo
+      priority: mandatory
+      fillRate: 98.21
+    - name: surface_styling
+      value: None
+      priority: good_to_have
+      fillRate: 35.06
+    - name: ItemId
+      value: ITM56CAC08281F11
+      priority: null
+      fillRate: null
+  row_index:
+    type: int
+    default: 0
+  temperature:
+    type: double
+    default: 1
+  top_p:
+    type: double
+    default: 1
+  max_tokens:
+    type: int
+    default: 512
+  resolution:
+    type: string
+    default: low
+  seed:
+    type: int
+    default: 42
+outputs:
+  fsn:
+    type: string
+    reference: ${inputs.fsn}
+  grounding_attributes:
+    type: string
+    reference: ${inputs.grounding_attributes}
+  ground_truth:
+    type: string
+    reference: ${inputs.keywords}
+  total_keywords:
+    type: string
+    reference: ${input_processing.output.keywords_count}
+  description_from_llm:
+    type: string
+    reference: ${openai_process.output.output}
+  prompt_tokens:
+    type: string
+    reference: ${openai_process.output.prompt_tokens}
+  total_tokens:
+    type: string
+    reference: ${openai_process.output.total_tokens}
+  openai_url:
+    type: string
+    reference: ${openai_process.output.openai_url}
+  time_taken:
+    type: string
+    reference: ${openai_process.output.time_taken}
+  completion_tokens:
+    type: string
+    reference: ${openai_process.output.completion_tokens}
+nodes:
+  - name: input_processing
+    type: python
+    source:
+      type: code
+      path: input_processing.py
+    inputs:
+      keywords: ${inputs.keywords}
+      grounding_attributes: ${inputs.grounding_attributes}
+    use_variants: false
+  - name: image_processing
+    type: python
+    source:
+      type: code
+      path: image_processing.py
+    inputs:
+      image_urls: ${inputs.images}
+  - name: openai_process
+    type: python
+    source:
+      type: code
+      path: openai_process.py
+    use_variants: true
+    inputs:
+     
+node_variants:
+  openai_process:
+    default_variant_id: variant_0
+    variants:
+      variant_0:
+        node:
+          type: python
+          source:
+            type: code
+            path: openai_process.py
+          inputs:
+            prompt_template: image_to_results_lmm_variant_0.jinja2
+            connection_1: aoai_gpt_4v_connection
+            connection_2: aoai_gpt4v_westus
+            connection_3: aoai_gpt4v_japan
+            connection_4: aoai_gpt4v_sweden
+            connection_5: aoai_gpt4v_aus
+            row_index: ${inputs.row_index}
+            product_images: ${image_processing.output}
+            fsn: ${inputs.fsn}
+            keywords: ${inputs.keywords}
+            mandatory_grounding_attributes: ${input_processing.output.mandatory_grounding_attributes}
+            temperature: ${inputs.temperature}
+            top_p: ${inputs.top_p}
+            seed: ${inputs.seed}
+            max_tokens: ${inputs.max_tokens}
+            res: ${inputs.resolution}
+            good_to_have_grounding_attributes: ${input_processing.output.good_to_have_grounding_attributes}
+            deployment_name: gpt-4v
+      variant_1:
+        node:
+          type: python
+          source:
+            type: code
+            path: openai_process.py
+          inputs:
+            prompt_template: image_to_results_lmm_variant_1.jinja2
+            connection_1: aoai_gpt_4v_connection
+            connection_2: aoai_gpt4v_westus
+            connection_3: aoai_gpt4v_japan
+            connection_4: aoai_gpt4v_sweden
+            connection_5: aoai_gpt4v_aus
+            row_index: ${inputs.row_index}
+            product_images: ${image_processing.output}
+            fsn: ${inputs.fsn}
+            keywords: ${inputs.keywords}
+            mandatory_grounding_attributes: ${input_processing.output.mandatory_grounding_attributes}
+            temperature: ${inputs.temperature}
+            top_p: ${inputs.top_p}
+            seed: ${inputs.seed}
+            max_tokens: ${inputs.max_tokens}
+            res: ${inputs.resolution}
+            good_to_have_grounding_attributes: ${input_processing.output.good_to_have_grounding_attributes}
+            deployment_name: gpt-4v
+            
+      

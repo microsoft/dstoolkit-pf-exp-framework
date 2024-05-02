@@ -1,0 +1,229 @@
+environment:
+  python_requirements_txt: requirements.txt
+inputs:
+  fsn:
+    type: string
+    default: FSN01
+    is_chat_input: false
+  description_from_llm:
+    type: string
+    default: The image showcases a model wearing a black jacket, layered over an
+      olive green t-shirt with graphic prints. The details of the jacket include
+      a front zip closure, ribbed cuffs, and a similar pattern at the bottom
+      hem. There are contrasting stitch details along the zipper line,
+      shoulders, and outer arms. Moreover, the jacket features side pockets with
+      zipper closures, providing both functionality and style. To complete the
+      look, the model is also wearing slim-fitting dark denim jeans. The brand
+      tag is visible on the left hip of the t-shirt, accentuating the outfit's
+      overall casual yet fashionable aesthetic.
+    is_chat_input: false
+  grounding_attributes:
+    type: list
+    default:
+    - name: occasion
+      value: Festive
+      priority: good_to_have
+      fillRate: 83.56
+    - name: other_details
+      value: Women Rayon Wine Printed Kurta Palazzo and Dupatta Set
+      priority: good_to_have
+      fillRate: 29.9
+    - name: color
+      value: Maroon
+      priority: mandatory
+      fillRate: 100
+    - name: keywords
+      value: ethnic set
+      priority: good_to_have
+      fillRate: 71.58
+    - name: keywords
+      value: kurta Pant set
+      priority: good_to_have
+      fillRate: 71.58
+    - name: keywords
+      value: kurta set
+      priority: good_to_have
+      fillRate: 71.58
+    - name: keywords
+      value: kurta set for girls
+      priority: good_to_have
+      fillRate: 71.58
+    - name: keywords
+      value: printed kurta
+      priority: good_to_have
+      fillRate: 71.58
+    - name: trend
+      value: Classic
+      priority: good_to_have
+      fillRate: 49.84
+    - name: trend
+      value: Traditional collection
+      priority: good_to_have
+      fillRate: 49.84
+    - name: pattern
+      value: Floral Print
+      priority: mandatory
+      fillRate: 100
+    - name: top_type
+      value: Kurta
+      priority: mandatory
+      fillRate: 99.42
+    - name: description
+      value: Wine embellished printed kurta with plazo with printed
+        dupatta.Wine  straight calf length kurta, has a round neck,
+        three-quarter sleeves, side slits.Wine stripe printed plazo, has
+        elasticated waistband.
+      priority: good_to_have
+      fillRate: 64.64
+    - name: print_type
+      value: Floral
+      priority: good_to_have
+      fillRate: 63.61
+    - name: add_on
+      value: Dupatta
+      priority: mandatory
+      fillRate: 99.92
+    - name: sleeve_style
+      value: Regular Sleeve
+      priority: good_to_have
+      fillRate: 68.47
+    - name: fabric_care
+      value: Hand Wash
+      priority: good_to_have
+      fillRate: 72.83
+    - name: brand
+      value: THE FAB FACTORY
+      priority: mandatory
+      fillRate: 100
+    - name: color_code
+      value: Wine
+      priority: mandatory
+      fillRate: 100
+    - name: ideal_for
+      value: Women
+      priority: mandatory
+      fillRate: 100
+    - name: bottom_fabric
+      value: Rayon
+      priority: good_to_have
+      fillRate: 66.25
+    - name: top_length
+      value: Calf Length
+      priority: good_to_have
+      fillRate: 70.35
+    - name: neck
+      value: Mandarin Collar
+      priority: good_to_have
+      fillRate: 77.13
+    - name: size
+      value: XL
+      priority: mandatory
+      fillRate: 100
+    - name: top_fabric
+      value: Rayon
+      priority: good_to_have
+      fillRate: 70.44
+    - name: dupatta_included
+      value: Yes
+      priority: good_to_have
+      fillRate: 71.52
+    - name: sleeve
+      value: Half Sleeve
+      priority: mandatory
+      fillRate: 100
+    - name: fabric
+      value: Viscose Rayon
+      priority: mandatory
+      fillRate: 100
+    is_chat_input: false
+  keywords:
+    type: object
+    default:
+      ethnicset: correct
+      kurtaPantset: incorrect
+      kurtaset: correct
+      kurtasetforgirls: incorrect
+      printedkurta: correct
+    is_chat_input: false
+outputs:
+  fsn:
+    type: string
+    reference: ${inputs.fsn}
+  grounding_attributes:
+    type: string
+    reference: ${inputs.grounding_attributes}
+  ground_truth:
+    type: string
+    reference: ${inputs.keywords}
+  total_keywords:
+    type: string
+    reference: ${input_processing.output.keywords_count}
+  experiment_result:
+    type: string
+    reference: ${llm_validate_keywords.output}
+  prompt:
+    type: string
+    reference: ${llm_prompt.output}
+nodes:
+  - name: input_processing
+    type: python
+    source:
+      type: code
+      path: input_processing.py
+    inputs:
+      keywords: ${inputs.keywords}
+      grounding_attributes: ${inputs.grounding_attributes}
+    use_variants: false
+  - name: llm_validate_keywords
+    type: llm
+    source:
+      type: code
+      path: text_to_results_llm.jinja2
+    inputs:
+      deployment_name: gpt-35
+      max_tokens: 4096
+      temperature: 0
+      top_p: 0.1
+      prompt_str: ${llm_prompt.output}
+    connection: aoai_gpt_35t_connection
+    api: chat
+    use_variants: false
+  - name: llm_prompt
+    use_variants: true
+node_variants:
+  llm_prompt:
+    default_variant_id: variant_1
+    variants:
+      variant_0:
+        node:
+          type: prompt
+          source:
+            type: code
+            path: llm_prompt_variant_0.jinja2
+          inputs:
+            keywords: ${input_processing.output.keywords}
+            product_image_description: ${inputs.description_from_llm}
+            mandatory_grounding_attributes: ${input_processing.output.mandatory_grounding_attributes}
+            good_to_have_grounding_attributes: ${input_processing.output.good_to_have_grounding_attributes}
+      variant_1:
+          node:
+            type: prompt
+            source:
+              type: code
+              path: llm_prompt_variant_1.jinja2
+            inputs:
+              keywords: ${input_processing.output.keywords}
+              product_image_description: ${inputs.description_from_llm}
+              mandatory_grounding_attributes: ${input_processing.output.mandatory_grounding_attributes}
+              good_to_have_grounding_attributes: ${input_processing.output.good_to_have_grounding_attributes}
+      variant_2:
+          node:
+            type: prompt
+            source:
+              type: code
+              path: llm_prompt_variant_2.jinja2
+            inputs:
+              keywords: ${input_processing.output.keywords}
+              product_image_description: ${inputs.description_from_llm}
+              mandatory_grounding_attributes: ${input_processing.output.mandatory_grounding_attributes}
+              good_to_have_grounding_attributes: ${input_processing.output.good_to_have_grounding_attributes}
