@@ -8,12 +8,12 @@ This document covers experiment execution process.
 *   Evalution
 
 ## Step1 Execution
-Step1 is GPT4V experiment which is executed using [experiment_step_1 flow](../keyword_correctness/flows/experiment_step_1/). In current example we have used two variants, so it creates two runs. Here is the sample code 
+Step1 is GPT4V experiment which is executed using [experiment_step1 flow](../keyword_correctness/flows/experiment_step1/). In current example we have used two variants, so it creates two runs. Here is the sample code 
 
 ```py
 # This code execute the step 1 of experiment. Please select the variants you want to run
-variants = experiment_step_1_flow.variants
-current_run_4_1 = Run(flow = experiment_step_1_flow, tags=tags, 
+variants = experiment_step1_flow.variants
+current_run_4_1 = Run(flow = experiment_step1_flow, tags=tags, 
                   runtime=runtime_in_cloud, data_id=data_id, 
                   linked_runs=[],
                   variants=variants, run_suffix=timestamp, env_vars = {"PF_WORKER_COUNT": "5"})
@@ -29,13 +29,13 @@ Output Example of Step1 which shows two runs generated.
 
 
 ## Step2 Execution
-Step2 is GPT3.5 experiment which is executed using [experiment_step_2 flow](../keyword_correctness/flows/experiment_step_2/). In current example we have used three variants of step two. Also, from first run we have 2 runs, so total it creates six runs(Step1 2 variants * Step2 3 variants). Here is the sample code 
+Step2 is GPT3.5 experiment which is executed using [experiment_step2 flow](../keyword_correctness/flows/experiment_step2/). In current example we have used three variants of step two. Also, from first run we have 2 runs, so total it creates six runs(Step1 2 variants * Step2 3 variants). Here is the sample code 
 
 ```py
 # This code execute the step 2 of experiment. Please select the variants you want to run and the linked runs from step 1
 run_names_4_1 = [run.name for run in executed_runs_4_1]
-variants = experiment_Step_2_flow.variants
-current_run_4_2 = Run(flow = experiment_Step_2_flow, tags=tags, 
+variants = experiment_step2_flow.variants
+current_run_4_2 = Run(flow = experiment_step2_flow, tags=tags, 
                   runtime=runtime_in_cloud,
                   linked_runs=run_names_4_1,
                   variants=variants, run_suffix=timestamp,env_vars = {"PF_WORKER_COUNT": "5"})
