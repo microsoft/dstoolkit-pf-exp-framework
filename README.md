@@ -3,38 +3,37 @@
 This experiment framework is a utility library that uses the prompt flow SDK to conduct, track and analyze experiments.
 
 ## Key Features of Experimentation Framework
-* **Making the experiment execution process developer friendly** by providing apis based on promptflow sdk.
-Framework offers APIs to create and run experiments, instead of using sdk functions directly.
-* **Conduct experiments on local machines or on AML workspace Framework** can switch between local or AML workspace by modifying one input param. Data scientists can run experiments with small dataset on local machines and use AML workspace to run experiments with large datasets.
-* **One-click execution of notebooks to run experiments with multiple flows and evaluation workflow**. Typically, the outputs of an experiment are fed as inputs to the evaluation stage. Data scientist may wish to run the evaluation stage following the experiment which may consists of multiple flows. In our case we had two step experiment followed by evaluation step. These stages can be merged into a notebook that can be executed with one click. This allows data scientists to run the entire workflow with minimal supervision.
-* **Assigning unique ids as suffix** to identify multiple experiments from same notebook and **unique tags as prefix** to each run to track runs from multiple developers. This helps in monitoring of the experiments. 
-* **Running experiments with multiple variants**. PromptFlow SDK api can create experiment runs with one variant at a time. To create runs with multiple variants, we have to use the sdk api repeatedly. Framework has simplified this process and allows data scientists to provide variant array as input and create multiple runs.
-* **Run experiments with several connected runs**. PromptFlow SDK api can only make experiment runs with one connected run each time. To make runs with more than one connected run, we have to use the sdk api multiple times. Framework has eased this process and lets data scientists give a linked runs array as input and create many runs.
-* **Get the outputs of the runs in either csv or jsonl format**. Framework provides utility functions to download the output of experiment and evaluation runs or merging outputs of multiple runs into one csv/jsonl file.
-* **A custom python tool that leverages OpenAI to make requests**. It currently makes requests to the GPT4V model, but it can also be used for other Azure OpenAI models or our own models. Some of the features of the custom python tool are:  
-    - Ability to send detailed param for running experiments for low and high resolution images.  
-    - Ability to use multiple open ai connections in a round robin way for scaling up the experiment and reducing the time needed for completing the experiment.  
-    - The custom python tool lets us include our own custom output params like prompt text, failure messages, temperature, top_k etc. that are hard to get from promptflow LLM tool
+
+* **Developer-Friendly Experiment Execution**: Simplified APIs streamline the process of running experiments.
+
+* **Flexible Execution Environment**: Experimentation can be conducted on both local machines and on Azure Machine Learning (AML) compute, facilitating seamless switching between environments based on dataset sizes.
+
+* **Versatile Experiment Flows**: Enable the chaining of experiments, allowing easy passing of outputs from one experiment to another.
+
+* **Efficient Experiment Tracking**: Unique identifiers and tags help monitor and differentiate experiments, aiding in efficient tracking and management.
+
+* **Variants and Connected Runs**: Simplified APIs enable the creation of experiment runs with multiple variants and connected runs in a single step, this in turn will create multiple runs using PromptFlow automatically.
+
+* **Output Management**: Provides utility functions to retrieve experiment outputs in various formats (CSV or JSONL) and merge outputs from multiple runs for streamlined analysis.
+
+* **Custom Python Tool for GPT4 with Vision**: Offers a custom Python tool that allows to make GPT4 vision with `detail` [parameter to control the resolution](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/gpt-with-vision?tabs=rest%2Csystem-assigned%2Cresource#detail-parameter-settings-in-image-processing-low-high-auto).  Read more on the [implementation here](https://github.com/microsoft/dstoolkit-pf-exp-framework/blob/main/docs/gpt4v_tooling.md#openai-process-custom-python-tool).
 
 ## Dev setup
+
 Please follow [this link for the dev setup](./docs/dev-setup.md) details.
 
-## Directory Structure
-*   [docs](./docs/) : Contains the documentation.
-*   [common](./common/): Contains common python files required for experiment execution
-*   [keyword_correctness](./keyword_correctness/): Contains experiment and evaluation flow for keyword correctness use case. 
+### Directory Structure
 
-## DataScience Metrics
-Datascience metrics used in the experimentation can be found [here.](./docs/data_science_metrics.md)
+* [docs](./docs/) : Contains the documentation.
+* [common](./common/): Contains common python files required for experiment execution
+* [keyword_correctness](./keyword_correctness/): Contains experiment and evaluation flow for keyword correctness use case. 
 
-## Experiment Details
-Please follow this [link](./docs/experiment_details.md) to get to know more about experiment details.
+## Sample Experiment and Evaluation flows
 
-## Experiment Execution 
-Please follow this [link](./docs/experiment_execution.md) to get to know more about experiment execution.
+Along with the framework, there is a sample use case for keyword correctness is implemented here with a two step experiment flows and also has an evaluation flow.
 
-## Details about GPt4v tooling
-Please follow this [link](./docs/gpt4v_tooling.md) to get more details related to gpt4v tooling.
+**Experiment architecture** - Read more on the [details of the experiment architecture](./docs/experiment_details.md)
 
+**Guidelines to execute the experiments** - Follow this link to understand the [experiment execution](./docs/experiment_execution.md)
 
-
+**Understand the metrics** - The sample evaluation flow evaluates the results, here is the breakdown of the metrics evaluated in the [evaluation flow](./docs/data_science_metrics.md)
