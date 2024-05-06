@@ -14,6 +14,7 @@
 - Run `make install` to setup a Python virtual environment and install the necessary packages.
 
 ## Create following resources in Azure
+
 - Create an Azure Machine Learning Workspace on Azure portal.
 - The example in this repo uses GPT4 with vision-preview and GPT3.5 turbo models. 
   -  Create Azure OpenAI instances in regions where gpt-4, vision preview is available. We can check availability from this [link.](https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models#gpt-4-and-gpt-4-turbo-preview-model-availability)
@@ -46,25 +47,21 @@ Install the prompt flow extension for VS Code by following [this link](https://m
 
 We need five connections one for GPT4V and another for GPT3.5-turbo.
 
-### Creating GPT4V Connection
+Please create connection files from the [template](../keyword_correctness/connections/aoai_gpt4v_region.yaml) in `keyword_correctness\connections`. Replace region with the region of Azure Open AI instance.
 
-Please create connection files from the [teample](../keyword_correctness/connections/aoai_gpt4v_region.yaml) in `keyword_correctness\connections`. Replace region with the region of Azure Open AI instance.
-
-Use this command to create gpt connections from connections listed in `keyword_correctness\connections` folder. Substitute api_key and api_base in the command
+You can use the `pf` cli to create the connections locally. A sample command to create a connection locally is shown below.
 
 ```shell
 pf connection create --file keyword_correctness\connections\aoai_gpt4v_westus.yaml --set api_key=<your_api_key> api_base="https://<azure_openai_resource_name>.openai.azure.com/"
 ```
 
-### Creating GPT3.5t Connection
+Refer here for more details on the [connection creation using `pf` cli](https://microsoft.github.io/promptflow/how-to-guides/manage-connections.html)
 
-Use this command to create gpt3.5t connection. Substitute api_key and api_base in the command
-
-```shell
-pf connection create --file keyword_correctness\connections\azure_openai_gpt35t.yaml --set api_key=<your_api_key> api_base="https://<azure_openai_resource_name>.openai.azure.com/"
-```
+### Update connection details in the flow
 
 After the connection is created, update the flow.dag.yaml file with the connection name, model name and the deployment name. Keep the deployment name same as the model name for simplicity.  
+
+Sample flow.dag.yaml file for GPT3.5T is shown below.
 
 ```yaml
 deployment_name: gpt-35-turbo
