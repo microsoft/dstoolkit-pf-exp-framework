@@ -1,5 +1,5 @@
 # Overview
-This document covers the details of the custom python tool used for making calls to GPT4V.
+This document covers the custom python tools used in experiment [step1](../docs/experiment_details.md) for making calls to GPT4V with images.
 
 ## Requirements with GPT4V usecase
 *   Use of `detail` param while sending requests to GPT4V. More details about the `detaul` param can be found [here](https://platform.openai.com/docs/guides/vision). Currently `detail` param is not supported in Promptlfow LLM tool. Using low resolution in detail in param help in reducing the token count and eventually cost of the experimentation.
@@ -10,7 +10,7 @@ This document covers the details of the custom python tool used for making calls
 ## Components in GPT4V flow
 
 ### Image Processing Custom Python tool
-Image process tool code is present [here.](../keyword_correctness/flows/experiment_step1/image_processing.py)
+`Image process tool` code is present [here.](../keyword_correctness/flows/experiment_step1/image_processing.py)
 Custom python tool `process_image` take the list of image urls. It resizes the images if image width or height is greater than 1024. Resized images are convered to base64 string and passed to the next step in the flow.
 
 
@@ -52,4 +52,7 @@ It has two main purpose:
 
     `flow.dag.yaml` should also contain these connections as input params.
 
-    To use these connections, please make sure that these connections are created in AML workspace. 
+    To use these connections, please make sure that these connections are created in AML workspace.   
+    In this example we have used five connections, but the number of connections can be changed depending on the use case. If number of connections are changed, following files need to be mofidifed.:
+    *   [flow.dag.yaml](../keyword_correctness/flows/experiment_step1/flow.dag.yaml)
+    *   [openai_process.py](../keyword_correctness/flows/experiment_step1/openai_process.py)
