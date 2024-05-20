@@ -37,3 +37,8 @@ Along with the framework, there is a sample use case for keyword correctness is 
 **Guidelines to execute the experiments** - Follow this link to understand the [experiment execution](./docs/experiment_execution.md)
 
 **Understand the metrics** - The sample evaluation flow evaluates the results, here is the breakdown of the metrics evaluated in the [evaluation flow](./docs/data_science_metrics.md)
+
+### Walkthrough of Experimentation Framework
+
+https://github.com/microsoft/dstoolkit-pf-exp-framework/assets/380340/e1bb878d-bf69-472b-b604-2eec5a18ed9d
+
