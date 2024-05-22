@@ -23,7 +23,9 @@
 - Create an [Azure Machine Learning compute instance](https://learn.microsoft.com/en-us/azure/machine-learning/how-to-create-compute-instance?view=azureml-api-2&tabs=azure-studio) on the Azure portal. For development purposes, you can select the `Standard_DS11_v2` CPU instance type.
 - Create a [prompt flow compute instance runtime](https://learn.microsoft.com/en-us/azure/machine-learning/prompt-flow/how-to-create-manage-runtime?view=azureml-api-2&tabs=cli%2Cpython#create-a-compute-instance-runtime-on-a-runtime-page) by selecting the compute instance created in the previous step.
 
-> Note: Idle shutdown does not occur on the AML computes which have prompt flow runtimes installed on them. Hence, please ensure to shutdown your compute instances when not in use.
+> Note: Idle shutdown does not occur on the AML computes which have prompt flow runtimes installed on them. Hence, please ensure to shutdown your compute instances when not in use.  
+
+> *Note: Recently new [`GPT4o` model](https://openai.com/index/hello-gpt-4o/) is launched. This model also supports images. Instead of GPT4v we can also use GPT4o model. Please follow similare steps to create connection and update flow.dag.yaml file to use GPT4o model.*
 
 ## Setup `.env` file
 
@@ -77,3 +79,8 @@ pf -h
 ```
 
 Refer to [this](https://github.com/microsoft/promptflow) repository for more info.
+
+## Troubleshooting
+- If you see any errors like `Request Header Fields Too Large` in promptflow ui after submitting jobs, please make sure to update the runtime to promptflow latest version.
+- Please make sure to use the latest version of promptflow pip package.
+- Please make sure that connections which are used in `flow.dag.yaml` are added in the PromptFlow.

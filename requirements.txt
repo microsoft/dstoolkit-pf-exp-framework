@@ -1,6 +1,6 @@
 flake8==7.0.0
 flake8-docstrings==1.7.0
-promptflow[azure]==1.10.0
+promptflow[azure]==1.11.0
 promptflow-tools==1.4.0
 jupyter==1.0.0
 python-dotenv==1.0.1
