@@ -16,7 +16,7 @@ This experiment framework is a utility library that uses the prompt flow SDK to 
 
 * **Output Management**: Provides utility functions to retrieve experiment outputs in various formats (CSV or JSONL) and merge outputs from multiple runs for streamlined analysis.
 
-* **Custom Python Tool for GPT4 with Vision**: Offers a custom Python tool that allows to make GPT4 vision with `detail` [parameter to control the resolution](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/gpt-with-vision?tabs=rest%2Csystem-assigned%2Cresource#detail-parameter-settings-in-image-processing-low-high-auto).  Read more on the [implementation here](https://github.com/microsoft/dstoolkit-pf-exp-framework/blob/main/docs/gpt4v_tooling.md#openai-process-custom-python-tool).
+* **Custom Python Tool for GPT4 with Vision or GPT4o model**: Offers a custom Python tool that allows to make GPT4 vision/GPT4o with `detail` [parameter to control the resolution](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/gpt-with-vision?tabs=rest%2Csystem-assigned%2Cresource#detail-parameter-settings-in-image-processing-low-high-auto).  Read more on the [implementation here](https://github.com/microsoft/dstoolkit-pf-exp-framework/blob/main/docs/gpt4v_tooling.md#openai-process-custom-python-tool).
 
 ## Dev setup
 

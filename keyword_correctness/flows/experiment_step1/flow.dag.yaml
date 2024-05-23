@@ -66,8 +66,7 @@ inputs:
       priority: mandatory
       fillRate: 99.42
     - name: description
-      value: Wine embellished printed kurta with plazo with printed
-        dupatta.
+      value: Wine embellished printed kurta with plazo with printed dupatta.
       priority: good_to_have
       fillRate: 64.64
     - name: add_on
@@ -200,30 +199,24 @@ outputs:
     type: string
     reference: ${openai_process.output.completion_tokens}
 nodes:
-  - name: input_processing
-    type: python
-    source:
-      type: code
-      path: input_processing.py
-    inputs:
-      keywords: ${inputs.keywords}
-      grounding_attributes: ${inputs.grounding_attributes}
-    use_variants: false
-  - name: image_processing
-    type: python
-    source:
-      type: code
-      path: image_processing.py
-    inputs:
-      image_urls: ${inputs.images}
-  - name: openai_process
-    type: python
-    source:
-      type: code
-      path: openai_process.py
-    use_variants: true
-    inputs:
-     
+- name: input_processing
+  type: python
+  source:
+    type: code
+    path: input_processing.py
+  inputs:
+    keywords: ${inputs.keywords}
+    grounding_attributes: ${inputs.grounding_attributes}
+  use_variants: false
+- name: image_processing
+  type: python
+  source:
+    type: code
+    path: image_processing.py
+  inputs:
+    image_urls: ${inputs.images}
+- name: openai_process
+  use_variants: true
 node_variants:
   openai_process:
     default_variant_id: variant_0
@@ -278,5 +271,3 @@ node_variants:
             res: ${inputs.resolution}
             good_to_have_grounding_attributes: ${input_processing.output.good_to_have_grounding_attributes}
             deployment_name: gpt-4v
-            
-      

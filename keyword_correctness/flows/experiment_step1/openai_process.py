@@ -120,9 +120,9 @@ def create_openai_client(connection: AzureOpenAIConnection, deployment_name:str)
     api_key = connection.api_key
     base_url = connection.api_base
     client = AzureOpenAI(
+        azure_endpoint=base_url,
         api_key=api_key,
-        api_version=connection.api_version,
-        base_url=f"{base_url}openai/deployments/{deployment_name}/extensions",
+        api_version="2024-02-01",
         max_retries=OPENAI_MAX_RETRIES
     )
     return client
